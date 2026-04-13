@@ -13,7 +13,7 @@ package com.mycompany.loginandregistration;
 public class LoginandRegistration {
 
         
-     // Boolean validation check ---------------
+     //------------ Boolean validation check ---------------
     
     public static boolean checkUsername(String username){
         return username.length() <= 5 && username.contains("_");
@@ -56,7 +56,7 @@ public class LoginandRegistration {
             return "Login failed: incorrect username or password. Try again.";
         }
     }
-
+//--------------Main Code----------------
     public static void main(String[] args) {
 
         String Username;
@@ -102,7 +102,7 @@ public class LoginandRegistration {
             }
         }
 
-        // Password validation
+        //------------ Password validation-------------
         boolean hasCorrectLength = Password.length() <= 8;
         boolean hasCapital = false;
         boolean hasSpecialChar = false;
