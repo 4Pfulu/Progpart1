@@ -20,7 +20,7 @@ public class LoginandRegistration {
     }
     
     public static boolean checkPasswordComplexity(String password) {
-        if (password.length() >8) return false;
+        if (password.length() <=8) return false;
         
         boolean hasCapital = false;
         boolean hasSpecialChar = false;
@@ -122,6 +122,9 @@ public class LoginandRegistration {
              hasDigits =true;
            }
         }
+            for(int i = 0; i < Password.length(); i++) {
+            char c = Password.charAt(i);
+        }
 
         if (hasCorrectLength && hasCapital && hasSpecialChar &&hasDigits) {
             System.out.println(" Password successfully captured");
@@ -142,6 +145,7 @@ public class LoginandRegistration {
         }
 
         // Cellphone validation: at least 10 characters AND must start with "+"
+            for (int i =1;i < cellPhoneNumber.length(); i++) {
         if (cellPhoneNumber.length() >= 10 && cellPhoneNumber.startsWith("+")) {
             System.out.println("cellphone number successfully added");
         } else {
