@@ -146,6 +146,8 @@ public class LoginandRegistration {
 
         // Cellphone validation: at least 10 characters AND must start with "+"
             for (int i =1;i < cellPhoneNumber.length(); i++) {
+            }
+            
         if (cellPhoneNumber.length() >= 10 && cellPhoneNumber.startsWith("+")) {
             System.out.println("cellphone number successfully added");
         } else {
