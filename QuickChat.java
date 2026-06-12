@@ -26,6 +26,10 @@ public class QuickChat {
         private String messageHash;
         private static int numMessages = 0;
         private static ArrayList<String> sentMessages = new ArrayList<>();
+        private static ArrayList<String> disregardedMessages = new ArrayList<>();
+        private static ArrayList<String> storedMessages = new ArrayList<>();      
+        private static ArrayList<String> messageHashes = new ArrayList<>();       
+        private static ArrayList<String> messageIDs = new ArrayList<>();          
 
         // Constructor
         public Message(String recipient, String message) {
@@ -33,6 +37,7 @@ public class QuickChat {
             this.message = message;
             this.messageID = String.valueOf((int)(Math.random() * 1000000000));
             numMessages++;
+            messageIDs.add(messageID);
         }
 
         // Check message length
@@ -52,6 +57,7 @@ public class QuickChat {
             String lastWord = words[words.length - 1];
             String firstTwoID = messageID.substring(0, 2);
             messageHash = (firstTwoID + ":" + numMessages + ":" + firstWord + lastWord).toUpperCase();
+            messageHashes.add(messageHash);
             return messageHash;
         }
 
@@ -68,6 +74,7 @@ public class QuickChat {
                 return "Message successfully sent.";
 
             } else if (choice == 2) {
+                disregardedMessages.add("- ID: " + messageID + " -Hash:" + messageHash + " - To: " + recipient + "Message:" + message);
                 return "Press 0 to delete the message.";
 
             } else {
@@ -83,6 +90,7 @@ public class QuickChat {
                     java.io.FileWriter file = new java.io.FileWriter("messages.json", true);
                     file.write(jsonMessage);
                     file.close();
+                    storedMessages.add(" - ID: " + messageID + " - Hash: " + messageHash + " - To: " + recipient + " - Message: " + message);
 
                 } catch (Exception e) {
                     System.out.println("Error storing message: " + e.getMessage());
@@ -97,11 +105,14 @@ public class QuickChat {
                 sentMessages.add(" - ID: " + messageID + " - Hash: " + messageHash + " - To: " + recipient + " - Message: " + message);
                 return "Message successfully sent.";
             } else if (choice == 2) {
+                disregardedMessages.add(" - ID: " + messageID + " - Hash: " + messageHash + " - To: " + recipient + " - Message: " + message);
                 return "Press 0 to delete the message.";
             } else {
+                storedMessages.add(" - ID: " + messageID + " - Hash: " + messageHash + " - To: " + recipient + " - Message: " + message);
                 return "Message successfully stored.";
             }
-        }
+        } 
+        
 
         // Print all messages
         public static String printMessages() {
@@ -118,6 +129,120 @@ public class QuickChat {
         // Return total messages
         public static int returnTotalMessages() {
             return numMessages;
+        }
+        
+          // Display all stored messages
+        public static void displayStoredMessages() {
+            if (storedMessages.isEmpty()) {
+                System.out.println("No stored messages.");
+            } else {
+                System.out.println("\n--- Stored Messages ---");
+                for (String msg : storedMessages) {
+                    System.out.println(msg);
+                }
+            }
+        }
+
+        //  Display longest message
+        public static void displayLongestMessage() {
+            String longest = "";
+            for (String msg : storedMessages) {
+                if (msg.length() > longest.length()) {
+                    longest = msg;
+                }
+            }
+            if (longest.isEmpty()) {
+                System.out.println("No stored messages.");
+            } else {
+                System.out.println("\nLongest message: " + longest);
+            }
+        }
+
+        // Search by message ID
+        public static void searchByMessageID(String searchID) {
+            boolean found = false;
+            for (String msg : storedMessages) {
+                if (msg.contains(searchID)) {
+                    System.out.println("Message found: " + msg);
+                    found = true;
+                }
+            }
+            if (!found) {
+                System.out.println("No message found with ID: " + searchID);
+            }
+        }
+
+        //  Search by recipient
+        public static void searchByRecipient(String searchRecipient) {
+            boolean found = false;
+            for (String msg : storedMessages) {
+                if (msg.contains(searchRecipient)) {
+                    System.out.println(msg);
+                    found = true;
+                }
+            }
+            if (!found) {
+                System.out.println("No messages found for: " + searchRecipient);
+            }
+        }
+
+        //  Delete by message hash
+        public static void deleteByHash(String hash) {
+            boolean found = false;
+            for (int i = 0; i < storedMessages.size(); i++) {
+                if (storedMessages.get(i).contains(hash)) {
+                    System.out.println("Message: \"" + storedMessages.get(i) + "\" successfully deleted.");
+                    storedMessages.remove(i);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                System.out.println("No message found with hash: " + hash);
+            }
+        }
+
+        //  Display full report
+        public static void displayReport() {
+            System.out.println("\n========== FULL REPORT ==========");
+
+            System.out.println("\n--- Sent Messages ---");
+            if (sentMessages.isEmpty()) {
+                System.out.println("None.");
+            } else {
+                for (String msg : sentMessages) {
+                    System.out.println(msg);
+                }
+            }
+
+            System.out.println("\n--- Disregarded Messages ---");
+            if (disregardedMessages.isEmpty()) {
+                System.out.println("None.");
+            } else {
+                for (String msg : disregardedMessages) {
+                    System.out.println(msg);
+                }
+            }
+
+            System.out.println("\n--- Stored Messages ---");
+            if (storedMessages.isEmpty()) {
+                System.out.println("None.");
+            } else {
+                for (String msg : storedMessages) {
+                    System.out.println(msg);
+                }
+            }
+
+            System.out.println("\n--- Message Hashes ---");
+            for (String hash : messageHashes) {
+                System.out.println(hash);
+            }
+
+            System.out.println("\n--- Message IDs ---");
+            for (String id : messageIDs) {
+                System.out.println(id);
+            }
+            
         }
 
         // Getters
@@ -171,6 +296,7 @@ public class QuickChat {
             System.out.println("\n1) Send Messages");
             System.out.println("2) Show recently sent messages");
             System.out.println("3) Quit");
+            System.out.println("4) Stored Messages");
             System.out.print("Choose: ");
             choice = Integer.parseInt(input.nextLine());
 
@@ -215,7 +341,53 @@ public class QuickChat {
                 System.out.println("Coming Soon.");
             } else if (choice == 3) {
                 System.out.println("Goodbye!");
+                break;
+            } else if (choice == 4) { 
+
+                int subChoice = 0;
+                while (subChoice != 7) {
+                    System.out.println("\n--- Stored Messages Menu ---");
+                    System.out.println("1)Display all stored messages");
+                    System.out.println("2)Display longest message");
+                    System.out.println("3)Search by message ID");
+                    System.out.println("4)Search by recipient");
+                    System.out.println("5)Delete message by hash");
+                    System.out.println("6)Display full report");
+                    System.out.println("7)Back to main menu");
+                    System.out.print("Choose: ");
+                    subChoice = Integer.parseInt(input.nextLine());
+
+                    if (subChoice == 1) {
+                        
+                        Message.displayStoredMessages();
+                    } else if (subChoice == 2) {
+                        
+                        Message.displayLongestMessage();
+                    } else if (subChoice == 3) {
+                        
+                        System.out.print("Enter message ID to search: ");
+                        String searchID = input.nextLine();
+                        Message.searchByMessageID(searchID);
+                        
+                    } else if (subChoice == 4) {
+                        System.out.print("Enter recipient number to search: ");
+                        String searchRecipient = input.nextLine();
+                        Message.searchByRecipient(searchRecipient);
+                        
+                    } else if (subChoice == 5) {
+                        System.out.print("Enter message hash to delete: ");
+                        String hash = input.nextLine();
+                        Message.deleteByHash(hash);
+                        
+                    } else if (subChoice == 6) {
+                        Message.displayReport();
+                        
+                    } else if (subChoice == 7) {
+                        System.out.println("Returning to main menu.");
+                    }
+                }
             }
+
         }
 
         input.close();
